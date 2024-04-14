@@ -2,7 +2,7 @@ import UserInput from "./UserInput";
 
 export default function InputContainer() {
     return (
-        <div id="body" className="center">
+        <div id="body">
             <UserInput/>
         </div>
     )

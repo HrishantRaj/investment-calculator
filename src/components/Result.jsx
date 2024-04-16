@@ -1,5 +1,12 @@
-export default function Result({props}) {
-    const {year,interest,valueEndOfYear,annualInvestment} = {...props};
+import { calculateInvestmentResults, formatter } from "../util/investment"
+
+export default function Result({ input }) {
+    const investmentResults = calculateInvestmentResults(input);
+    const initialInvestment =
+    investmentResults[0].valueEndOfYear -
+    investmentResults[0].interest -
+    investmentResults[0].annualInvestment;
+
     return (
         <table id="result" className="center">
             <thead>
@@ -12,13 +19,24 @@ export default function Result({props}) {
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>{year}</td>
-                    <td>{valueEndOfYear+annualInvestment}</td>
-                    <td>{interest}</td>
-                    <td>{valueEndOfYear}</td>
-                    <td>{annualInvestment}</td>
-                </tr>
+                {
+                    investmentResults.map(yearData => {
+                        const totalInterest =
+                            yearData.valueEndOfYear -
+                            yearData.annualInvestment * yearData.year -
+                            initialInvestment;
+                        const totalInvestment = yearData.valueEndOfYear - totalInterest;
+                        return (
+                            <tr key={yearData.year}>
+                                <td>{yearData.year}</td>
+                                <td>{formatter.format(yearData.valueEndOfYear)}</td>
+                                <td>{formatter.format(yearData.interest)}</td>
+                                <td>{formatter.format(totalInterest)}</td>
+                                <td>{formatter.format(totalInvestment)}</td>
+                            </tr>
+                        )
+                    })
+                }
             </tbody>
         </table>
     )

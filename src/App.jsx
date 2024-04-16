@@ -1,22 +1,32 @@
 import InputContainer from "./components/InputContainer"
 import Header from "./components/Header"
 import Result from "./components/Result"
-import { calculateInvestmentResults } from "./util/investment"
+import { useState } from "react"
+
+let input = {
+  initialInvestment: 1000,
+  annualInvestment: 500,
+  expectedReturn: 8,
+  duration: 10
+}
 
 function App() {
+  const [userInput, setUserInput] = useState(input);
 
-  let initialInvestment = '1000';
-  let annualInvestment = '300';
-  let expectedReturn = '8';
-  let duration = '10';
+  const isValid = userInput.duration>0 ? true : false;
 
-  const investmentResults = calculateInvestmentResults(initialInvestment,annualInvestment,expectedReturn,duration);
-  <h1>{investmentResults.initialInvestment}</h1>
+  function handleInputChange(inputIdentifier, newValue) {
+    setUserInput(preValue => {
+      return { ...preValue, [inputIdentifier]: +newValue };
+    })
+  }
+
   return (
     <>
-      <Header/>
-      <InputContainer/>
-      <Result investmentResults={investmentResults}/>
+      <Header />
+      <InputContainer input={userInput} onHandleInputChange={handleInputChange} />
+      {!isValid && <p className="center">Please enter a duration greater than zero.</p>}
+      {isValid && <Result input={userInput}/>}
     </>
   )
 }
